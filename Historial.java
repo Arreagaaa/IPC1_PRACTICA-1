@@ -1,18 +1,22 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Historial {
-    private static List<Jugador> jugadores = new ArrayList<>();
+    private static Jugador[] jugadores = new Jugador[100]; // Tamaño máximo del arreglo
+    private static int count = 0;
 
     public static void agregarJugador(Jugador jugador, int fallos, int palabrasEncontradas) {
         jugador.setFallos(fallos);
         jugador.setPalabrasEncontradas(palabrasEncontradas);
-        jugadores.add(jugador);
+        if (count < jugadores.length) {
+            jugadores[count++] = jugador;
+        } else {
+            System.out.println("No se pueden agregar más jugadores.");
+        }
     }
 
     // ARMANDO LA TABLA DE RESULTADOS REUTILIZABLE
-    private static void mostrarTabla(List<Jugador> lista, String titulo) {
-        if (lista.isEmpty()) {
+    private static void mostrarTabla(Jugador[] lista, int size, String titulo) {
+        if (size == 0) {
             System.out.println("No hay datos para mostrar.");
             return;
         }
@@ -20,19 +24,20 @@ public class Historial {
         System.out.printf("%-15s %-10s %-10s %-10s%n", "Nombre", "Puntos", "Fallos", "Encontradas");
         System.out.println("--------------------------------------------------");
 
-        for (Jugador j : lista) {
+        for (int i = 0; i < size; i++) {
+            Jugador j = lista[i];
             System.out.printf("%-15s %-10d %-10d %-10d%n",
                     j.getNombre(), j.getPuntuacion(), j.getFallos(), j.getPalabrasEncontradas());
         }
     }
 
     public static void mostrarHistorial() {
-        mostrarTabla(jugadores, "HISTORIAL DE PARTIDAS");
+        mostrarTabla(jugadores, count, "HISTORIAL DE PARTIDAS");
     }
 
     public static void mostrarPuntuacionesAltas() {
-        List<Jugador> topJugadores = new ArrayList<>(jugadores);
-        topJugadores.sort((a, b) -> Integer.compare(b.getPuntuacion(), a.getPuntuacion()));
-        mostrarTabla(topJugadores.subList(0, Math.min(3, topJugadores.size())), "TOP 3 JUGADORES");
+        Jugador[] topJugadores = Arrays.copyOf(jugadores, count);
+        Arrays.sort(topJugadores, 0, count, (a, b) -> Integer.compare(b.getPuntuacion(), a.getPuntuacion()));
+        mostrarTabla(topJugadores, Math.min(3, count), "TOP 3 JUGADORES");
     }
 }

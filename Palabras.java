@@ -1,85 +1,69 @@
-import java.util.*;
+import java.util.Scanner;
+import java.util.Arrays;
 
-//CRUD DE PALABRAS
-class Palabras {
-    private List<String> palabras = new ArrayList<>();
+public class Palabras {
+    private String[] palabras;
+    private int count;
 
-    // CANTIDAD INICIAL Y CREAR PALABRAS
+    public Palabras() {
+        this.palabras = new String[100]; // Tamaño máximo del arreglo
+        this.count = 0;
+    }
+
+    public String[] getPalabras() {
+        return Arrays.copyOf(palabras, count);
+    }
+
+    public int getCount() {
+        return count;
+    }
+
     public void gestionarPalabras(Scanner scanner) {
         System.out.print("Ingrese la cantidad de palabras: ");
         int cantidad = scanner.nextInt();
-        scanner.nextLine();
+        scanner.nextLine(); // Limpiar el buffer
 
         for (int i = 0; i < cantidad; i++) {
-            while (true) {
-                System.out.print("Ingrese la palabra " + (i + 1) + ": ");
-                String palabra = scanner.nextLine().toUpperCase();
-
-                if (!validarLongitud(palabra)) {
-                    System.out.println("Error: La palabra debe tener entre 3 y 8 caracteres.");
-                } else {
-                    palabras.add(palabra);
-                    break;
-                }
-            }
-        }
-    }
-
-    // MODIFICAR PALABRA
-    public void modificarPalabra(Scanner scanner) {
-        if (palabras.isEmpty()) {
-            System.out.println("No hay palabras ingresadas.");
-            return;
-        }
-
-        mostrarPalabras();
-
-        System.out.print("Ingrese la palabra a modificar: ");
-        String palabraAntigua = scanner.nextLine().toUpperCase();
-
-        if (!palabras.contains(palabraAntigua)) {
-            System.out.println("Error: La palabra no se encuentra en la lista.");
-            return;
-        }
-
-        while (true) {
-            System.out.print("Ingrese la nueva palabra: ");
-            String palabraNueva = scanner.nextLine().toUpperCase();
-
-            if (!validarLongitud(palabraNueva)) {
-                System.out.println("Error: La palabra debe tener entre 3 y 8 caracteres.");
+            System.out.print("Ingrese una palabra: ");
+            String palabra = scanner.nextLine().toUpperCase();
+            if (count < palabras.length) {
+                palabras[count++] = palabra;
             } else {
-                palabras.set(palabras.indexOf(palabraAntigua), palabraNueva);
-                System.out.println("Palabra modificada correctamente.");
+                System.out.println("No se pueden agregar más palabras.");
                 break;
             }
         }
     }
 
-    // ELIMINAR PALABRA
-    public void eliminarPalabra(String palabra) {
-        boolean eliminada = palabras.removeIf(p -> p.equalsIgnoreCase(palabra));
-
-        if (eliminada) {
-            System.out.println("Palabra eliminada correctamente.");
-        } else {
-            System.out.println("Error: La palabra no se encuentra en la lista.");
+    public void modificarPalabra(Scanner scanner) {
+        System.out.print("Ingrese la palabra a modificar: ");
+        String palabra = scanner.nextLine().toUpperCase();
+        for (int i = 0; i < count; i++) {
+            if (palabras[i].equals(palabra)) {
+                System.out.print("Ingrese la nueva palabra: ");
+                palabras[i] = scanner.nextLine().toUpperCase();
+                return;
+            }
         }
+        System.out.println("Palabra no encontrada.");
     }
 
-    private boolean validarLongitud(String palabra) {
-        return palabra.length() >= 3 && palabra.length() <= 8;
+    public void eliminarPalabra(String palabra) {
+        for (int i = 0; i < count; i++) {
+            if (palabras[i].equals(palabra)) {
+                for (int j = i; j < count - 1; j++) {
+                    palabras[j] = palabras[j + 1];
+                }
+                palabras[--count] = null;
+                return;
+            }
+        }
+        System.out.println("Palabra no encontrada.");
     }
 
     public void mostrarPalabras() {
-        if (palabras.isEmpty()) {
-            System.out.println("No hay palabras ingresadas.");
-        } else {
-            System.out.println("Palabras actuales: " + palabras);
+        for (int i = 0; i < count; i++) {
+            System.out.println(palabras[i]);
         }
-    }
-
-    public List<String> getPalabras() {
-        return palabras;
     }
 }

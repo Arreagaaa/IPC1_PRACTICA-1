@@ -5,7 +5,7 @@ class Tablero {
     private int tamaño;
     private Random random = new Random();
 
-    public void generarTablero(List<String> palabras) {
+    public void generarTablero(String[] palabras) {
 
         CargasAnimaciones.mostrarCarga("Creando el tablero...");
 

@@ -61,7 +61,7 @@ public class Juego {
         // LLAMAR METODO PARA GESTIONAR PALABRAS (CRUD)
         gestionarPalabras();
 
-        if (palabras.getPalabras().isEmpty()) {
+        if (palabras.getCount() == 0) {
             System.out.println("No hay palabras ingresadas. Regresando al menú...");
             return;
         }
@@ -103,20 +103,20 @@ public class Juego {
     }
 
     private void jugar() {
-        if (palabras.getPalabras().isEmpty()) {
+        if (palabras.getCount() == 0) {
             System.out.println("No hay palabras para jugar.");
             return;
         }
         int errores = 0;
         jugador.aumentarPuntuacion(25);
         // NUMERO DE PALABRAS INICIALES
-        int totalPalabras = palabras.getPalabras().size();
+        int totalPalabras = palabras.getCount();
 
         while (errores < 4) {
             System.out.print("Ingrese una palabra: ");
             String palabra = scanner.nextLine().toUpperCase();
 
-            if (palabras.getPalabras().contains(palabra)) {
+            if (Arrays.asList(palabras.getPalabras()).contains(palabra)) {
                 System.out.println("¡Palabra encontrada!");
                 jugador.aumentarPuntuacion(palabra.length());
                 palabras.eliminarPalabra(palabra);
@@ -129,10 +129,10 @@ public class Juego {
             }
 
             // PROGRESO DEL JUEGO
-            System.out.println("Palabras encontradas: " + (totalPalabras - palabras.getPalabras().size()));
-            System.out.println("Palabras pendientes: " + palabras.getPalabras().size());
+            System.out.println("Palabras encontradas: " + (totalPalabras - palabras.getCount()));
+            System.out.println("Palabras pendientes: " + palabras.getCount());
 
-            if (palabras.getPalabras().isEmpty()) {
+            if (palabras.getCount() == 0) {
                 System.out.println("¡Ganaste! Puntuación final: " + jugador.getPuntuacion());
                 Historial.agregarJugador(jugador, errores, totalPalabras);
                 return;
@@ -140,7 +140,7 @@ public class Juego {
         }
 
         System.out.println("¡Perdiste! Puntuación final: " + jugador.getPuntuacion());
-        Historial.agregarJugador(jugador, errores, totalPalabras - palabras.getPalabras().size());
+        Historial.agregarJugador(jugador, errores, totalPalabras - palabras.getCount());
     }
 
     private void mostrarInformacionEstudiante() {
@@ -148,5 +148,4 @@ public class Juego {
         System.out.println("Carnet: 202303204");
         System.out.println("Sección: B");
     }
-
 }
